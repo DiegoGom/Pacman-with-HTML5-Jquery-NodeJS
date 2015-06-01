@@ -1,0 +1,165 @@
+
+<html>
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Retro Pacman</title>
+    <style>
+@media (max-width: 600px) {
+  div.pacman {
+    display: none;
+  }
+}
+</style>    
+    <style type="text/css">
+      @font-face {
+      font-family: 'BDCartoonShoutRegular';
+        src: url('BD_Cartoon_Shout-webfont.ttf') format('truetype');
+      font-weight: normal;
+      font-style: normal;
+      }
+      #pacman {
+        height:450px;
+        width:342px;
+        margin:20px auto;
+      }
+      #shim { 
+        font-family: BDCartoonShoutRegular; 
+        position:absolute;
+        visibility:hidden
+      }
+      h1 { font-family: BDCartoonShoutRegular; text-align:center; }
+      body { width:342px; margin:0px auto; font-family:sans-serif; }
+      a { text-decoration:none; }
+    </style>
+
+<body>
+        <div id="inicio">
+          <h1>Retro Pacman!</h1><br>
+          <font size="6">Instrucciones:</font><br><br>
+          <font size="4">
+        1.-Conectate a la red de <i>"Lunave-Digital"</i> y entra a <b> <label id="direccion"></label>/control</b>.<br>
+          
+          2.-Podras jugar con este codigo <b><label id="llave"></label></b></label><br><label id="control"></label><br>
+          </font>
+      </div>
+
+
+  <div id="pacman" >
+    
+    
+     
+
+     
+     
+<div style="display:none;">
+  <button id="start">star
+    </button>
+      <button id="up">subir
+      </button>
+
+      <button id="down">bajar
+      </button>
+
+      <button id="izq">izquierda
+      </button>
+
+      <button id="der">derecha
+      </button>
+    </div>
+  </div>
+
+  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js">
+  </script>
+
+  <script src="/public/pacman.js"></script>
+
+  <script src="/public/modernizr-1.5.min.js"></script>
+
+  <script src="http://code.jquery.com/jquery-1.11.1.js"></script>
+  <script src="/socket.io/socket.io.js"></script>
+
+  <script>
+    var socket = io.connect();
+    var sessionId = '';
+    var llave = make_key();
+
+    $(document).ready(function(){
+
+      
+      socket.on('direccion', function (direccion) {
+        $('#direccion').text(direccion.url);
+      });
+      
+      $('#llave').text(llave);
+
+      });
+
+    socket.on('envio', function (data) { 
+      if(data.key == llave){
+        var comando=data.msg;
+        
+
+        if(comando=='start'){
+          $( "#start" ).trigger( "click" );
+          return false;
+        }
+
+        if(comando=='up'){
+          $( "#up" ).trigger( "click" );
+          return false;
+        }
+
+        if(comando=='down'){
+          $( "#down" ).trigger( "click" );
+          return false;
+        }
+        if(comando=='izq'){
+          $( "#izq" ).trigger( "click" );
+          return false;
+        }
+
+        if(comando=='der'){
+          $( "#der" ).trigger( "click" );
+          return false;
+        }
+
+
+        $('body').css({'background':data.msg});
+            
+      }
+      
+    });
+    
+    socket.on('connect', function(){
+      sessionId = socket.io.engine.id;
+      socket.emit('conexion',{id:sessionId,key:llave});
+      console.log("IdUser:"+sessionId);
+    });
+
+
+    function make_key(){
+      var text = "";
+      var possible = "ABCDEFGHIJKLMNPQRSTUVWXYZ123456789";
+
+      for( var i=0; i < 5; i++ )
+          text += possible.charAt(Math.floor(Math.random() * possible.length));
+
+      return text;
+    }
+
+    var el = document.getElementById("pacman");
+
+    if (Modernizr.canvas && Modernizr.localstorage && 
+        Modernizr.audio && (Modernizr.audio.ogg || Modernizr.audio.mp3)) {
+      window.setTimeout(function () { PACMAN.init(el, "./"); }, 0);
+    } else { 
+      el.innerHTML = "Sorry, needs a decent browser<br /><small>" + 
+        "(firefox 3.6+, Chrome 4+, Opera 10+ and Safari 4+)</small>";
+    }
+
+  </script>
+  
+</body>
+</html>
