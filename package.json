@@ -6,8 +6,8 @@
     "start": "node app"
   },
   "dependencies": {
+    "dns": "*",
     "express": "*",
-    "jade": "*",
     "socket.io": "*",
     "underscore": "*"
   }
