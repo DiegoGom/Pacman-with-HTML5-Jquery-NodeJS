@@ -892,6 +892,9 @@ var PACMAN = (function () {
         if (user.getLives() > 0) {
             startLevel();
         }
+        if (user.getLives() == 0) {
+            location.reload();
+        }
     }
 
     function setState(nState) { 
